@@ -58,7 +58,7 @@ export default function Header() {
         <Link to="/contact">Contact</Link>
         {/* <Link to="/our-center">Our Centers</Link> */}
         <Link to="/admin/dashboard">Admin</Link>
-        <Link to="/admin/register">Admin Register</Link>
+        {/* <Link to="/admin/register">Admin Register</Link> */}
       </nav>
       {/* </div> */}
     </header>
