@@ -1,0 +1,68 @@
+export const courses = [
+  {
+    slug: "advance-diploma-in-financial-accounting",
+    title: "Advance Diploma In Financial Accounting",
+    description:
+      "Comprehensive accounting course covering bookkeeping, Tally, GST and more.",
+    image: "/images/icon-7.png",
+    duration: "6 months",
+    level: "Intermediate",
+  },
+  {
+    slug: "microsoft-excel",
+    title: "MICROSOFT EXCEL",
+    description: "Excel from basics to advanced data analysis and macros.",
+    image: "/images/service-2.jpg",
+    duration: "3 months",
+    level: "Beginner",
+  },
+  {
+    slug: "spoken-english",
+    title: "SPOKEN ENGLISH",
+    description: "Improve fluency, vocabulary and communication skills.",
+    image: "/images/col-3.jpg",
+    duration: "4 months",
+    level: "Beginner",
+  },
+  {
+    slug: "red-hat-certified-engineer",
+    title: "RED HAT CERTIFIED ENGINEER",
+    description:
+      "Enterprise Linux administration and certification preparation.",
+    image: "/images/New-Project12_jpg.jpg",
+    duration: "12 months",
+    level: "Advanced",
+  },
+  {
+    slug: "cisco-certified-networking-associates",
+    title: "CISCO CERTIFIED NETWORKING ASSOCIATES",
+    description: "Network fundamentals, routing, switching and CCNA prep.",
+    image: "/images/New-Project10_jpg.jpg",
+    duration: "10 months",
+    level: "Intermediate",
+  },
+  {
+    slug: "diploma-in-graphic-print-design",
+    title: "Diploma in Graphic & Print Design (CGPD)",
+    description: "Master design tools, typography, and creative principles.",
+    image: "/images/New-Project9_jpg.jpg",
+    duration: "8 months",
+    level: "Beginner",
+  },
+  {
+    slug: "cloud-computing-essentials",
+    title: "CLOUD COMPUTING ESSENTIALS",
+    description: "AWS, Azure and GCP fundamentals for cloud deployment.",
+    image: "/images/New-Project8.jpg",
+    duration: "6 months",
+    level: "Intermediate",
+  },
+  {
+    slug: "certificate-in-digital-marketing",
+    title: "CERTIFICATE IN DIGITAL MARKETING",
+    description: "SEO, SEM, social media marketing and analytics.",
+    image: "/images/New-Project7.jpg",
+    duration: "5 months",
+    level: "Beginner",
+  },
+];

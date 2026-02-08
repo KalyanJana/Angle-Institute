@@ -1,0 +1,4 @@
+.franchise-page { padding: 40px 20px; max-width: 1100px; margin: 0 auto; }
+.franchise-hero { text-align: center; margin-bottom: 24px; }
+.franchise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.fr-card { background: #fff; border: 1px solid #e6e8ee; padding: 16px; border-radius: 8px; box-shadow: 0 6px 18px rgba(22,36,70,0.04); }

@@ -1,0 +1,48 @@
+.our-center-page {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.oc-hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.oc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.oc-card {
+  border: 1px solid #e6e8ee;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(22, 36, 70, 0.04);
+}
+
+.oc-card-header h3 {
+  margin: 0 0 6px 0;
+}
+
+.oc-address {
+  margin: 0;
+  color: #586079;
+  font-size: 0.95rem;
+}
+
+.oc-features {
+  margin: 12px 0 16px 0;
+  padding-left: 18px;
+}
+
+.oc-cta {
+  display: inline-block;
+  background: #192f59;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
