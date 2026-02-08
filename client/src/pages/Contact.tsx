@@ -27,10 +27,25 @@ export default function Contact() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${API_BASE_URL}${API_ENQUIRIES_ENDPOINT}`, form);
-      setStatus("Thank you! Your enquiry has been submitted successfully.");
+      const response = await axios.post(
+        `${API_BASE_URL}/api/submissions/contact`,
+        form,
+        {
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+
+      const data = response.data;
+      setStatus(
+        data.message ||
+          "Thank you! Your message has been submitted. Our team will review and get back to you shortly.",
+      );
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+
+      // Auto-reset status message after 5 seconds
+      setTimeout(() => setStatus(null), 5000);
     } catch (err) {
+      console.error("Submission error:", err);
       setStatus("Error submitting form. Please try again.");
     } finally {
       setLoading(false);

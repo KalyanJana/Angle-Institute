@@ -1,164 +1,714 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../components/Button";
+import CourseModal from "../components/CourseModal";
+import { courses as dummyCourses } from "../data/courses";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
-const API_ENQUIRIES_ENDPOINT =
-  import.meta.env.VITE_API_ENQUIRIES_ENDPOINT || "/api/enquiries";
 
-interface Enquiry {
-  id: string;
+interface Submission {
+  _id: string;
+  submissionId: string;
+  type: "contact" | "franchise" | "enquiry";
   name: string;
   email: string;
   phone: string;
-  subject: string;
-  message: string;
+  message?: string;
+  subject?: string;
+  address?: string;
+  location?: string;
+  emailSent: boolean;
+  retryCount: number;
   createdAt: string;
-  status: "new" | "read" | "replied";
+  sentAt?: string;
+}
+
+interface Course {
+  _id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image: string;
+  duration: string;
+  level: string;
+  price?: number;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 export default function AdminDashboard() {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
-  const [filter, setFilter] = useState<"all" | "new" | "read" | "replied">(
-    "all",
+  // Auth State
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("adminToken") || "");
+  const [loginForm, setLoginForm] = useState({
+    username: "",
+    password: "",
+  });
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  // Dashboard State
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] =
+    useState<Submission | null>(null);
+  const [filterType, setFilterType] = useState<
+    "all" | "contact" | "franchise" | "enquiry"
+  >("all");
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+
+  // Course State
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [showCourseForm, setShowCourseForm] = useState(false);
+  const [courseLoading, setCoureLoading] = useState(false);
+  const [addCourseLoading, setAddCourseLoading] = useState(false);
+  const [deleteCourseLoading, setDeleteCourseLoading] = useState<string | null>(
+    null,
   );
 
-  useEffect(() => {
-    fetchEnquiries();
-  }, []);
+  // View State (submissions or courses)
+  const [currentView, setCurrentView] = useState<"submissions" | "courses">(
+    "submissions",
+  );
 
-  async function fetchEnquiries() {
+  // Check if already authenticated
+  useEffect(() => {
+    if (token) {
+      setIsAuthenticated(true);
+      fetchSubmissions();
+      fetchCourses();
+    }
+  }, [token]);
+
+  // Fetch courses when view changes
+  useEffect(() => {
+    if (currentView === "courses" && isAuthenticated) {
+      fetchCourses();
+    }
+  }, [currentView, isAuthenticated]);
+
+  // Handle Login
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginError(null);
+    setLoginLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/login`,
+        loginForm,
+      );
+
+      const { token: newToken } = response.data;
+      localStorage.setItem("adminToken", newToken);
+      setToken(newToken);
+      setIsAuthenticated(true);
+      setLoginForm({ username: "", password: "" });
+    } catch (err: any) {
+      setLoginError(
+        err.response?.data?.error || "Login failed. Please try again.",
+      );
+    } finally {
+      setLoginLoading(false);
+    }
+  }
+
+  // Handle Logout
+  function handleLogout() {
+    localStorage.removeItem("adminToken");
+    setToken("");
+    setIsAuthenticated(false);
+    setSubmissions([]);
+    setSelectedSubmission(null);
+    setCourses([]);
+    setCurrentView("submissions");
+  }
+
+  // Fetch Submissions
+  async function fetchSubmissions() {
+    setLoading(true);
     try {
       const response = await axios.get(
-        `${API_BASE_URL}${API_ENQUIRIES_ENDPOINT}`,
+        `${API_BASE_URL}/api/admin/submissions`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
       );
-      setEnquiries(response.data.enquiries || []);
-    } catch (err) {
-      console.error("Failed to fetch enquiries:", err);
+
+      setSubmissions(response.data.submissions || []);
+    } catch (err: any) {
+      console.error("Failed to fetch submissions:", err);
+      if (err.response?.status === 401) {
+        handleLogout();
+      }
     } finally {
       setLoading(false);
     }
   }
 
-  async function updateStatus(
-    id: string,
-    newStatus: "new" | "read" | "replied",
-  ) {
-    try {
-      await axios.patch(`${API_BASE_URL}${API_ENQUIRIES_ENDPOINT}/${id}`, {
-        status: newStatus,
-      });
-      setEnquiries(
-        enquiries.map((e) => (e.id === id ? { ...e, status: newStatus } : e)),
-      );
-      if (selectedEnquiry?.id === id) {
-        setSelectedEnquiry({ ...selectedEnquiry, status: newStatus });
-      }
-    } catch (err) {
-      console.error("Failed to update status:", err);
-    }
-  }
-
-  async function deleteEnquiry(id: string) {
-    if (!window.confirm("Are you sure you want to delete this enquiry?"))
+  // Delete Submission
+  async function handleDelete(submissionId: string) {
+    if (!window.confirm("Are you sure you want to delete this submission?"))
       return;
+
+    setDeleteLoading(submissionId);
     try {
-      await axios.delete(`${API_BASE_URL}${API_ENQUIRIES_ENDPOINT}/${id}`);
-      setEnquiries(enquiries.filter((e) => e.id !== id));
-      setSelectedEnquiry(null);
-    } catch (err) {
-      console.error("Failed to delete enquiry:", err);
+      await axios.delete(
+        `${API_BASE_URL}/api/admin/submissions/${submissionId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      setSubmissions((prev) =>
+        prev.filter((s) => s.submissionId !== submissionId),
+      );
+      if (selectedSubmission?.submissionId === submissionId) {
+        setSelectedSubmission(null);
+      }
+    } catch (err: any) {
+      console.error("Failed to delete submission:", err);
+      alert("Failed to delete submission");
+    } finally {
+      setDeleteLoading(null);
     }
   }
 
-  const filteredEnquiries =
-    filter === "all" ? enquiries : enquiries.filter((e) => e.status === filter);
-  const newCount = enquiries.filter((e) => e.status === "new").length;
+  // Fetch Courses
+  async function fetchCourses() {
+    setCoureLoading(true);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/admin/courses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setCourses(response.data.courses || []);
+    } catch (err: any) {
+      console.error("Failed to fetch courses, using dummy data:", err);
+      // Use dummy data if API fails
+      setCourses(
+        dummyCourses.map((course, index) => ({
+          ...(course as any),
+          _id: `dummy-${index}`,
+          createdAt: new Date().toISOString(),
+        })),
+      );
+    } finally {
+      setCoureLoading(false);
+    }
+  }
+
+  // Add Course
+  async function handleAddCourse(formData: any) {
+    setAddCourseLoading(true);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/admin/courses`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      const newCourse = response.data.course;
+      setCourses((prev) => [newCourse, ...prev]);
+      setShowCourseForm(false);
+      alert("Course added successfully!");
+    } catch (err: any) {
+      console.error("Failed to add course:", err);
+      throw new Error(
+        err.response?.data?.error || "Failed to add course. Please try again.",
+      );
+    } finally {
+      setAddCourseLoading(false);
+    }
+  }
+
+  // Delete Course
+  async function handleDeleteCourse(courseId: string) {
+    if (!window.confirm("Are you sure you want to delete this course?")) return;
+
+    setDeleteCourseLoading(courseId);
+    try {
+      await axios.delete(`${API_BASE_URL}/api/admin/courses/${courseId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setCourses((prev) => prev.filter((c) => c._id !== courseId));
+      alert("Course deleted successfully!");
+    } catch (err: any) {
+      console.error("Failed to delete course:", err);
+      alert("Failed to delete course");
+    } finally {
+      setDeleteCourseLoading(null);
+    }
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <main>
+        <div
+          style={{
+            maxWidth: 400,
+            margin: "60px auto",
+            padding: 32,
+            background: "#fff",
+            borderRadius: 8,
+            border: "1px solid #e0e0e0",
+          }}
+        >
+          <h1 style={{ textAlign: "center", marginTop: 0 }}>Admin Login</h1>
+          <p style={{ textAlign: "center", color: "#666" }}>
+            Enter your credentials to access the admin panel
+          </p>
+
+          <form onSubmit={handleLogin} style={{ display: "grid", gap: 16 }}>
+            <div>
+              <label
+                style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                placeholder="Enter your username"
+                value={loginForm.username}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, username: e.target.value })
+                }
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 6,
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            <div>
+              <label
+                style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={loginForm.password}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, password: e.target.value })
+                }
+                required
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 6,
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
+              />
+            </div>
+
+            {loginError && (
+              <div
+                style={{
+                  padding: 12,
+                  background: "#f8d7da",
+                  color: "#721c24",
+                  borderRadius: 6,
+                  fontSize: "0.9rem",
+                }}
+              >
+                {loginError}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={loginLoading}
+              style={{ width: "100%" }}
+            >
+              {loginLoading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </div>
+      </main>
+    );
+  }
+
+  const filteredSubmissions =
+    filterType === "all"
+      ? submissions
+      : submissions.filter((s) => s.type === filterType);
+
+  const contactCount = submissions.filter((s) => s.type === "contact").length;
+  const franchiseCount = submissions.filter(
+    (s) => s.type === "franchise",
+  ).length;
+  const enquiryCount = submissions.filter((s) => s.type === "enquiry").length;
 
   return (
     <main>
-      <h1>Admin Dashboard</h1>
-      <p>Manage student enquiries and applications.</p>
-
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "250px 1fr",
-          gap: 24,
-          marginTop: 32,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 24,
         }}
       >
-        {/* Sidebar */}
-        <div
-          style={{
-            background: "#fff",
-            padding: 20,
-            borderRadius: 8,
-            border: "1px solid #e0e0e0",
-            height: "fit-content",
-          }}
+        <h1>Admin Dashboard</h1>
+        <Button variant="outline" onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
+
+      {/* View Switcher */}
+      <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
+        <Button
+          variant={currentView === "submissions" ? "primary" : "outline"}
+          onClick={() => setCurrentView("submissions")}
         >
-          <h3 style={{ marginTop: 0 }}>Filters</h3>
-          <div style={{ display: "grid", gap: 8 }}>
+          📋 Submissions
+        </Button>
+        <Button
+          variant={currentView === "courses" ? "primary" : "outline"}
+          onClick={() => setCurrentView("courses")}
+        >
+          📚 Courses
+        </Button>
+      </div>
+
+      {currentView === "submissions" ? (
+        <>
+          <p>Manage form submissions from Contact and Franchise pages.</p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "250px 1fr",
+              gap: 24,
+              marginTop: 32,
+            }}
+          >
+            {/* Sidebar */}
             <div
               style={{
-                padding: "8px 12px",
-                background: filter === "all" ? "#0b5ed7" : "#f5f5f5",
-                color: filter === "all" ? "#fff" : "#000",
-                borderRadius: 6,
-                cursor: "pointer",
+                background: "#fff",
+                padding: 20,
+                borderRadius: 8,
+                border: "1px solid #e0e0e0",
+                height: "fit-content",
               }}
-              onClick={() => setFilter("all")}
             >
-              All ({enquiries.length})
+              <h3 style={{ marginTop: 0 }}>Filter by Type</h3>
+              <div style={{ display: "grid", gap: 8 }}>
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    background: filterType === "all" ? "#0b5ed7" : "#f5f5f5",
+                    color: filterType === "all" ? "#fff" : "#000",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setFilterType("all")}
+                >
+                  All ({submissions.length})
+                </div>
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    background:
+                      filterType === "contact" ? "#0b5ed7" : "#f5f5f5",
+                    color: filterType === "contact" ? "#fff" : "#000",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setFilterType("contact")}
+                >
+                  Contact ({contactCount})
+                </div>
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    background:
+                      filterType === "franchise" ? "#0b5ed7" : "#f5f5f5",
+                    color: filterType === "franchise" ? "#fff" : "#000",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setFilterType("franchise")}
+                >
+                  Franchise ({franchiseCount})
+                </div>
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    background:
+                      filterType === "enquiry" ? "#0b5ed7" : "#f5f5f5",
+                    color: filterType === "enquiry" ? "#fff" : "#000",
+                    borderRadius: 6,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setFilterType("enquiry")}
+                >
+                  Enquiry ({enquiryCount})
+                </div>
+              </div>
             </div>
-            <div
-              style={{
-                padding: "8px 12px",
-                background: filter === "new" ? "#0b5ed7" : "#f5f5f5",
-                color: filter === "new" ? "#fff" : "#000",
-                borderRadius: 6,
-                cursor: "pointer",
-              }}
-              onClick={() => setFilter("new")}
-            >
-              New ({newCount})
-            </div>
-            <div
-              style={{
-                padding: "8px 12px",
-                background: filter === "read" ? "#0b5ed7" : "#f5f5f5",
-                color: filter === "read" ? "#fff" : "#000",
-                borderRadius: 6,
-                cursor: "pointer",
-              }}
-              onClick={() => setFilter("read")}
-            >
-              Read
-            </div>
-            <div
-              style={{
-                padding: "8px 12px",
-                background: filter === "replied" ? "#0b5ed7" : "#f5f5f5",
-                color: filter === "replied" ? "#fff" : "#000",
-                borderRadius: 6,
-                cursor: "pointer",
-              }}
-              onClick={() => setFilter("replied")}
-            >
-              Replied
+
+            {/* Main Content */}
+            <div>
+              {loading ? (
+                <p>Loading submissions...</p>
+              ) : filteredSubmissions.length === 0 ? (
+                <p
+                  style={{
+                    background: "#fff",
+                    padding: 20,
+                    borderRadius: 8,
+                    border: "1px solid #e0e0e0",
+                  }}
+                >
+                  No submissions found.
+                </p>
+              ) : (
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 24,
+                  }}
+                >
+                  {/* List */}
+                  <div>
+                    <h3>Submissions ({filteredSubmissions.length})</h3>
+                    <div style={{ display: "grid", gap: 12 }}>
+                      {filteredSubmissions.map((s) => (
+                        <div
+                          key={s._id}
+                          onClick={() => setSelectedSubmission(s)}
+                          style={{
+                            padding: 12,
+                            background:
+                              selectedSubmission?._id === s._id
+                                ? "#e7f1ff"
+                                : "#fff",
+                            border:
+                              selectedSubmission?._id === s._id
+                                ? "2px solid #0b5ed7"
+                                : "1px solid #e0e0e0",
+                            borderRadius: 6,
+                            cursor: "pointer",
+                            transition: "all 0.2s",
+                          }}
+                        >
+                          <div style={{ fontWeight: 600 }}>{s.name}</div>
+                          <div style={{ fontSize: "0.85rem", color: "#666" }}>
+                            {s.email}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: "0.85rem",
+                              color: "#999",
+                              marginTop: 4,
+                            }}
+                          >
+                            {s.phone}
+                          </div>
+                          <div
+                            style={{
+                              marginTop: 8,
+                              display: "flex",
+                              gap: 8,
+                              alignItems: "center",
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: "0.75rem",
+                                padding: "2px 8px",
+                                background:
+                                  s.type === "contact"
+                                    ? "#17a2b8"
+                                    : s.type === "franchise"
+                                      ? "#ffc107"
+                                      : "#6c757d",
+                                color: "#fff",
+                                borderRadius: 3,
+                              }}
+                            >
+                              {s.type}
+                            </span>
+                            {s.emailSent && (
+                              <span
+                                style={{
+                                  fontSize: "0.75rem",
+                                  padding: "2px 8px",
+                                  background: "#28a745",
+                                  color: "#fff",
+                                  borderRadius: 3,
+                                }}
+                              >
+                                Email Sent
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Detail */}
+                  {selectedSubmission && (
+                    <div
+                      style={{
+                        background: "#fff",
+                        padding: 20,
+                        borderRadius: 8,
+                        border: "1px solid #e0e0e0",
+                      }}
+                    >
+                      <h3 style={{ marginTop: 0 }}>Submission Details</h3>
+                      <div style={{ display: "grid", gap: 12 }}>
+                        <div>
+                          <strong>Type:</strong> {selectedSubmission.type}
+                        </div>
+                        <div>
+                          <strong>Name:</strong> {selectedSubmission.name}
+                        </div>
+                        <div>
+                          <strong>Email:</strong>
+                          <a href={`mailto:${selectedSubmission.email}`}>
+                            {selectedSubmission.email}
+                          </a>
+                        </div>
+                        <div>
+                          <strong>Phone:</strong>
+                          <a href={`tel:${selectedSubmission.phone}`}>
+                            {selectedSubmission.phone}
+                          </a>
+                        </div>
+
+                        {selectedSubmission.subject && (
+                          <div>
+                            <strong>Subject:</strong>{" "}
+                            {selectedSubmission.subject}
+                          </div>
+                        )}
+
+                        {selectedSubmission.message && (
+                          <div>
+                            <strong>Message:</strong>
+                            <p
+                              style={{
+                                background: "#f5f5f5",
+                                padding: 12,
+                                borderRadius: 6,
+                                marginTop: 8,
+                              }}
+                            >
+                              {selectedSubmission.message}
+                            </p>
+                          </div>
+                        )}
+
+                        {selectedSubmission.address && (
+                          <div>
+                            <strong>Address:</strong>{" "}
+                            {selectedSubmission.address}
+                          </div>
+                        )}
+
+                        {selectedSubmission.location && (
+                          <div>
+                            <strong>Location:</strong>{" "}
+                            {selectedSubmission.location}
+                          </div>
+                        )}
+
+                        <div>
+                          <strong>Email Status:</strong>
+                          <div
+                            style={{
+                              marginTop: 8,
+                              padding: 8,
+                              background: selectedSubmission.emailSent
+                                ? "#d4edda"
+                                : "#f8d7da",
+                              color: selectedSubmission.emailSent
+                                ? "#155724"
+                                : "#721c24",
+                              borderRadius: 6,
+                              fontSize: "0.9rem",
+                            }}
+                          >
+                            {selectedSubmission.emailSent
+                              ? `✓ Email sent at ${new Date(selectedSubmission.sentAt || "").toLocaleString()}`
+                              : `✗ Email not sent (Retries: ${selectedSubmission.retryCount})`}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong>Submitted:</strong> <br />
+                          {new Date(
+                            selectedSubmission.createdAt,
+                          ).toLocaleString()}
+                        </div>
+
+                        <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              handleDelete(selectedSubmission.submissionId)
+                            }
+                            disabled={deleteLoading === selectedSubmission._id}
+                          >
+                            {deleteLoading === selectedSubmission._id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        </>
+      ) : (
+        // Courses view
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
+            }}
+          >
+            <h2 style={{ margin: 0 }}>Courses ({courses.length})</h2>
+            <div style={{ display: "flex", gap: 8 }}>
+              <Button variant="outline" onClick={() => setShowCourseForm(true)}>
+                + Add Course
+              </Button>
+              <Button variant="outline" onClick={() => fetchCourses()}>
+                ⟳ Refresh
+              </Button>
+            </div>
+          </div>
 
-        {/* Main Content */}
-        <div>
-          {loading ? (
-            <p>Loading enquiries...</p>
-          ) : filteredEnquiries.length === 0 ? (
+          {courseLoading ? (
+            <p>Loading courses...</p>
+          ) : courses.length === 0 ? (
             <p
               style={{
                 background: "#fff",
@@ -167,181 +717,78 @@ export default function AdminDashboard() {
                 border: "1px solid #e0e0e0",
               }}
             >
-              No enquiries found.
+              No courses found.
             </p>
           ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 24,
-              }}
-            >
-              {/* List */}
-              <div>
-                <h3>Enquiries ({filteredEnquiries.length})</h3>
-                <div style={{ display: "grid", gap: 12 }}>
-                  {filteredEnquiries.map((e) => (
-                    <div
-                      key={e.id}
-                      onClick={() => setSelectedEnquiry(e)}
-                      style={{
-                        padding: 12,
-                        background:
-                          selectedEnquiry?.id === e.id ? "#e7f1ff" : "#fff",
-                        border:
-                          selectedEnquiry?.id === e.id
-                            ? "2px solid #0b5ed7"
-                            : "1px solid #e0e0e0",
-                        borderRadius: 6,
-                        cursor: "pointer",
-                        transition: "all 0.2s",
-                      }}
-                    >
-                      <div style={{ fontWeight: 600 }}>{e.name}</div>
-                      <div style={{ fontSize: "0.85rem", color: "#666" }}>
-                        {e.email}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "0.85rem",
-                          color: "#999",
-                          marginTop: 4,
-                        }}
-                      >
-                        {e.subject}
-                      </div>
-                      <div
-                        style={{
-                          marginTop: 8,
-                          display: "flex",
-                          gap: 8,
-                          alignItems: "center",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: "0.75rem",
-                            padding: "2px 8px",
-                            background:
-                              e.status === "new"
-                                ? "#ffc107"
-                                : e.status === "read"
-                                  ? "#17a2b8"
-                                  : "#28a745",
-                            color: "#fff",
-                            borderRadius: 3,
-                          }}
-                        >
-                          {e.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Detail */}
-              {selectedEnquiry && (
+            <div style={{ display: "grid", gap: 12 }}>
+              {courses.map((c) => (
                 <div
+                  key={c._id}
                   style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: 12,
                     background: "#fff",
-                    padding: 20,
-                    borderRadius: 8,
                     border: "1px solid #e0e0e0",
+                    borderRadius: 8,
                   }}
                 >
-                  <h3 style={{ marginTop: 0 }}>Enquiry Details</h3>
-                  <div style={{ display: "grid", gap: 12 }}>
-                    <div>
-                      <strong>Name:</strong> {selectedEnquiry.name}
+                  <div>
+                    <div style={{ fontWeight: 700 }}>{c.title}</div>
+                    <div style={{ fontSize: "0.9rem", color: "#666" }}>
+                      {c.description}
                     </div>
-                    <div>
-                      <strong>Email:</strong> {selectedEnquiry.email}
-                    </div>
-                    <div>
-                      <strong>Phone:</strong> {selectedEnquiry.phone}
-                    </div>
-                    <div>
-                      <strong>Subject:</strong> {selectedEnquiry.subject}
-                    </div>
-                    <div>
-                      <strong>Message:</strong>
-                      <p
-                        style={{
-                          background: "#f5f5f5",
-                          padding: 12,
-                          borderRadius: 6,
-                          marginTop: 8,
-                        }}
-                      >
-                        {selectedEnquiry.message}
-                      </p>
-                    </div>
-                    <div>
-                      <strong>Submitted:</strong>{" "}
-                      {new Date(selectedEnquiry.createdAt).toLocaleString()}
-                    </div>
-                    <div>
-                      <strong>Status:</strong>
-                      <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-                        <Button
-                          variant={
-                            selectedEnquiry.status === "new"
-                              ? "primary"
-                              : "outline"
-                          }
-                          size="sm"
-                          onClick={() =>
-                            updateStatus(selectedEnquiry.id, "new")
-                          }
-                        >
-                          New
-                        </Button>
-                        <Button
-                          variant={
-                            selectedEnquiry.status === "read"
-                              ? "primary"
-                              : "outline"
-                          }
-                          size="sm"
-                          onClick={() =>
-                            updateStatus(selectedEnquiry.id, "read")
-                          }
-                        >
-                          Read
-                        </Button>
-                        <Button
-                          variant={
-                            selectedEnquiry.status === "replied"
-                              ? "primary"
-                              : "outline"
-                          }
-                          size="sm"
-                          onClick={() =>
-                            updateStatus(selectedEnquiry.id, "replied")
-                          }
-                        >
-                          Replied
-                        </Button>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => deleteEnquiry(selectedEnquiry.id)}
-                      >
-                        Delete
-                      </Button>
+                    <div
+                      style={{
+                        marginTop: 6,
+                        fontSize: "0.85rem",
+                        color: "#333",
+                      }}
+                    >
+                      {c.duration} • {c.level} {c.price ? `• ₹${c.price}` : ""}
                     </div>
                   </div>
+
+                  <div
+                    style={{ display: "flex", gap: 8, alignItems: "center" }}
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(c.image, "_blank")}
+                    >
+                      View Image
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigator.clipboard?.writeText(c.slug)}
+                    >
+                      Copy Slug
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeleteCourse(c._id)}
+                      disabled={deleteCourseLoading === c._id}
+                    >
+                      {deleteCourseLoading === c._id ? "Deleting..." : "Delete"}
+                    </Button>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
           )}
-        </div>
-      </div>
+
+          <CourseModal
+            isOpen={showCourseForm}
+            onClose={() => setShowCourseForm(false)}
+            onSubmit={handleAddCourse}
+            isLoading={addCourseLoading}
+          />
+        </>
+      )}
     </main>
   );
 }

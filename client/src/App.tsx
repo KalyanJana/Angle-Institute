@@ -10,6 +10,7 @@ import CourseDetail from "./pages/CourseDetail";
 import Placement from "./pages/Placement";
 import StudentZone from "./pages/StudentZone";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminRegister from "./pages/AdminRegister";
 import OurCenter from "./pages/OurCenter";
 import Franchise from "./pages/Franchise";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -32,6 +33,7 @@ export default function App() {
           <Route path="/our-center" element={<OurCenter />} />
           <Route path="/franchise" element={<Franchise />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
         </Routes>
       </div>
       <Footer />

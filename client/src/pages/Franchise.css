@@ -2,3 +2,19 @@
 .franchise-hero { text-align: center; margin-bottom: 24px; }
 .franchise-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .fr-card { background: #fff; border: 1px solid #e6e8ee; padding: 16px; border-radius: 8px; box-shadow: 0 6px 18px rgba(22,36,70,0.04); }
+
+.franchise-form-wrap { margin-top: 28px; display: flex; justify-content: center; }
+.fr-form-card { width: 100%; max-width: 760px; background: #fff; border: 1px solid #e6e8ee; padding: 20px; border-radius: 8px; box-shadow: 0 6px 18px rgba(22,36,70,0.04); }
+.fr-form-card h2 { margin-top: 0; }
+.franchise-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.franchise-form label { display: flex; flex-direction: column; font-weight: 600; font-size: 0.9rem; }
+.franchise-form input, .franchise-form textarea { margin-top: 6px; padding: 8px 10px; border: 1px solid #dcdfe6; border-radius: 6px; font-size: 0.95rem; }
+.fr-form-actions { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+.fr-success { color: green; font-weight: 600; }
+.fr-error { color: #c33; font-weight: 600; }
+
+@media (max-width: 720px) {
+	.franchise-page { padding: 24px 12px; }
+	.franchise-form { grid-template-columns: 1fr; }
+	.fr-form-card { padding: 16px; }
+}

@@ -98,9 +98,7 @@ main {
 
 /* Header */
 header{background:#fff}
-.top-header{
-  width: 100%;
-}
+
 .site-header{
   display:flex;
   align-items:center;
@@ -282,3 +280,21 @@ footer{
 }
 footer a { color: var(--brand-light); }
 footer a:hover { color: var(--accent); }
+
+/* Admin register page styles */
+.admin-register { max-width: 720px; margin: 36px auto; padding: 12px; }
+.admin-register h1 { margin-top: 0; }
+.admin-register p { margin-bottom: 12px; color: var(--muted); }
+.admin-register-form { display: grid; gap: 12px; }
+.admin-register-form label { display: block; font-weight: 600; font-size: 0.95rem; color: var(--text-dark); }
+.admin-register-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.admin-register-form input:focus { outline: none; border-color: var(--brand); box-shadow: 0 4px 12px rgba(11,94,215,0.08); }
+.admin-register-status { margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 6px; color: var(--text-dark); }
+
