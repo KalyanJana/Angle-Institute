@@ -28,7 +28,7 @@ export default function Home() {
             }}
           />
           <div style={{ flex: 1, minWidth: 300 }}>
-            <h1>Welcome to Lalani Academy</h1>
+            <h1>Welcome to Angle Institute</h1>
             <p style={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
               Leading training institute for IT, networking, multimedia and
               professional development. We've been empowering students since
@@ -82,7 +82,7 @@ export default function Home() {
           marginBottom: 48,
         }}
       >
-        <h2>Why Choose Lalani Academy?</h2>
+        <h2>Why Choose Angle Institute?</h2>
         <div
           style={{
             display: "grid",

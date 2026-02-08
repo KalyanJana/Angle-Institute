@@ -1,7 +1,7 @@
 export default function About() {
   return (
     <main>
-      <h1>About Lalani Academy</h1>
+      <h1>About Angle Institute</h1>
 
       <div
         style={{

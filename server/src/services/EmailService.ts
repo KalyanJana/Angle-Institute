@@ -24,7 +24,7 @@ class EmailService {
    * Initialize email transporter with configured settings
    */
   private initTransporter() {
-    const emailUser = process.env.SMTP_USER || "no-reply@lalaniacademy.in";
+    const emailUser = process.env.SMTP_USER || "noreply@angleinstitute.com";
     const emailPass = process.env.SMTP_PASS || "";
     const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
     const smtpPort = parseInt(process.env.SMTP_PORT || "587");
@@ -59,7 +59,7 @@ class EmailService {
 
     try {
       await this.transporter.sendMail({
-        from: process.env.SMTP_USER || "noreply@lalaniacademy.in",
+        from: process.env.SMTP_USER || "noreply@angleinstitute.com",
         ...payload,
       });
 

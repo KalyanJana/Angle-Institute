@@ -15,8 +15,8 @@ export default function Footer() {
         <div>
           <h4 style={{ marginTop: 0 }}>About Us</h4>
           <p>
-            Lalani Academy, established in 1998, is a premier training institute
-            for IT, networking, and skills development.
+            Angle Institute, established as a premier training institute for IT,
+            design, for IT, networking, and skills development.
           </p>
         </div>
         <div>
@@ -51,7 +51,7 @@ export default function Footer() {
           textAlign: "center",
         }}
       >
-        © {new Date().getFullYear()} Lalani Academy. All rights reserved.
+        © {new Date().getFullYear()} Angle Institute. All rights reserved.
       </div>
     </footer>
   );

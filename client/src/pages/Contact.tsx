@@ -8,7 +8,7 @@ const API_ENQUIRIES_ENDPOINT =
   import.meta.env.VITE_API_ENQUIRIES_ENDPOINT || "/api/enquiries";
 const CONTACT_PHONE = import.meta.env.VITE_CONTACT_PHONE || "+91-9088012311";
 const CONTACT_EMAIL =
-  import.meta.env.VITE_CONTACT_EMAIL || "ho@lalaniacademy.in";
+  import.meta.env.VITE_CONTACT_EMAIL || "info@angleinstitute.com";
 const CONTACT_ADDRESS =
   import.meta.env.VITE_CONTACT_ADDRESS || "1A, Khetra Das Lane, Kolkata-700012";
 

@@ -44,7 +44,7 @@ router.post("/contact", async (req: Request, res: Response) => {
         phone,
         message,
       });
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@lalaniacademy.in";
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@angleinstitute.com";
 
       const sent = await EmailService.sendWithRetry({
         to: adminEmail,
@@ -111,7 +111,7 @@ router.post("/franchise", async (req: Request, res: Response) => {
         location,
       });
       const franchiseEmail =
-        process.env.FRANCHISE_EMAIL || "franchise@lalaniacademy.in";
+        process.env.FRANCHISE_EMAIL || "franchise@angleinstitute.com";
 
       const sent = await EmailService.sendWithRetry({
         to: franchiseEmail,

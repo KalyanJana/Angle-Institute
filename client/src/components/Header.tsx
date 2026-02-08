@@ -8,8 +8,8 @@ export default function Header() {
     <header className="site-header container">
       {/* <div className="site-header container"> */}
       <div className="site-logo">
-        <img src="/images/logo.png" alt="Lalani logo" />
-        <div style={{ fontWeight: 700 }}>Lalani Academy</div>
+        <img src="/images/logo.png" alt="Angle Institute logo" />
+        <div style={{ fontWeight: 700 }}>Angle Institute</div>
       </div>
 
       <button
