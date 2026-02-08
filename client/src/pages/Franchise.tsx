@@ -49,7 +49,6 @@ export default function Franchise() {
         },
       );
 
-      const data = response.data;
       setStatus("success");
       setForm({ name: "", email: "", phone: "", address: "", location: "" });
 

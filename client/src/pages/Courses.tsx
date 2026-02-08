@@ -12,42 +12,42 @@ export default function Courses() {
     useState<typeof dummyCourses>(dummyCourses);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function fetchCourses() {
-      setLoading(true);
-      try {
-        const res = await axios.get(`${API_BASE_URL}/api/courses`);
-        if (
-          res.data &&
-          Array.isArray(res.data.courses) &&
-          res.data.courses.length > 0
-        ) {
-          // Normalize: server returns objects with slug/title/description/image/duration/level
-          setCoursesList(
-            res.data.courses.map((c: any) => ({
-              slug: c.slug,
-              title: c.title,
-              description: c.description,
-              image: c.image,
-              duration: c.duration,
-              level: c.level,
-            })),
-          );
-          return;
-        }
-      } catch (err) {
-        // fall through to use dummy data
-        console.warn("Courses API failed, using dummy data", err);
-      } finally {
-        setLoading(false);
-      }
+  // useEffect(() => {
+  //   async function fetchCourses() {
+  //     setLoading(true);
+  //     try {
+  //       const res = await axios.get(`${API_BASE_URL}/api/courses`);
+  //       if (
+  //         res.data &&
+  //         Array.isArray(res.data.courses) &&
+  //         res.data.courses.length > 0
+  //       ) {
+  //         // Normalize: server returns objects with slug/title/description/image/duration/level
+  //         setCoursesList(
+  //           res.data.courses.map((c: any) => ({
+  //             slug: c.slug,
+  //             title: c.title,
+  //             description: c.description,
+  //             image: c.image,
+  //             duration: c.duration,
+  //             level: c.level,
+  //           })),
+  //         );
+  //         return;
+  //       }
+  //     } catch (err) {
+  //       // fall through to use dummy data
+  //       console.warn("Courses API failed, using dummy data", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
 
-      // fallback
-      setCoursesList(dummyCourses);
-    }
+  //     // fallback
+  //     setCoursesList(dummyCourses);
+  //   }
 
-    fetchCourses();
-  }, []);
+  //   fetchCourses();
+  // }, []);
 
   return (
     <main>
@@ -57,9 +57,9 @@ export default function Courses() {
         business, and more
       </p>
 
-      {loading ? (
+      {/* {loading ? (
         <p>Loading courses...</p>
-      ) : (
+      ) : ( */}
         <div className="courses-grid">
           {coursesList.map((c) => (
             <Link
@@ -78,7 +78,7 @@ export default function Courses() {
             </Link>
           ))}
         </div>
-      )}
+      {/* )} */}
     </main>
   );
 }

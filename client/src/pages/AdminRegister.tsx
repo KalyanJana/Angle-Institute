@@ -20,7 +20,7 @@ export default function AdminRegister() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/signup`, form, {
+      await axios.post(`${API_BASE_URL}/api/auth/signup`, form, {
         headers: { "Content-Type": "application/json" },
       });
       setStatus("Admin created successfully. You can now login.");
