@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import "./TopBanner.css";
 
 export default function TopBanner() {
-  const contactPhone = import.meta.env.VITE_CONTACT_PHONE || "+91-9088012311";
-  const contactEmail =
-    import.meta.env.VITE_CONTACT_EMAIL || "ho@lalaniacademy.in";
+  const contactPhone = import.meta.env.VITE_CONTACT_PHONE;
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
 
   return (
     <div className="top-banner">

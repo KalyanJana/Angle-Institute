@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const contactPhone = import.meta.env.VITE_CONTACT_PHONE;
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
+  const contactAddress = import.meta.env.VITE_CONTACT_ADDRESS;
+
   return (
     <footer>
       <div
@@ -38,9 +42,9 @@ export default function Footer() {
         </div>
         <div>
           <h4 style={{ marginTop: 0 }}>Contact Info</h4>
-          <p>📞 +91-9088012311</p>
-          <p>📧 ho@lalaniacademy.in</p>
-          <p>📍 Kolkata, India</p>
+          <p>📞 {contactPhone}</p>
+          <p>📧 {contactEmail}</p>
+          <p>📍 {contactAddress}</p>
         </div>
       </div>
       <div
