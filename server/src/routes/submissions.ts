@@ -143,7 +143,8 @@ router.post("/franchise", async (req: Request, res: Response) => {
 router.get("/:submissionId/status", (req: Request, res: Response) => {
   try {
     const { submissionId } = req.params;
-    const record = SessionStore.get(submissionId);
+    const sid = Array.isArray(submissionId) ? submissionId[0] : submissionId;
+    const record = SessionStore.get(sid);
 
     if (!record) {
       return res.status(404).json({ error: "Submission not found or expired" });

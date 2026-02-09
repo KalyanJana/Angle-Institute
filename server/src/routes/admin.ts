@@ -59,9 +59,10 @@ router.delete(
       }
 
       // Clean up from session store if it exists
-      const sessionRecord = SessionStore.get(submissionId);
+      const sid = Array.isArray(submissionId) ? submissionId[0] : submissionId;
+      const sessionRecord = SessionStore.get(sid);
       if (sessionRecord) {
-        SessionStore.cleanup(submissionId);
+        SessionStore.cleanup(sid);
       }
 
       res.json({
