@@ -28,7 +28,9 @@ export default function About() {
           </p>
         </div>
         <img
-          src="/images/unnamed.png"
+          src={
+            "https://res.cloudinary.com/diwn8dfxk/image/upload/v1770719855/welcome_qurxck.webp"
+          }
           alt="About us"
           style={{ borderRadius: 8, width: "100%", objectFit: "contain" }}
         />

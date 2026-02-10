@@ -11,7 +11,13 @@ export default function Home() {
     <main>
       <div className="hero">
         <div className="hero-content">
-          <img src="/images/col-3.jpg" alt="banner" className="hero-image" />
+          <img
+            src={
+              "https://res.cloudinary.com/diwn8dfxk/image/upload/v1770719855/welcome_qurxck.webp"
+            }
+            alt="banner"
+            className="hero-image"
+          />
           <div className="hero-text">
             <h1>Welcome to Angle Institute</h1>
             <p>

@@ -1,7 +1,7 @@
 import "./WhatsAppButton.scss";
 
 export default function WhatsAppButton() {
-  const raw = import.meta.env.VITE_WHATSAPP_NUMBER || "+919088012311";
+  const raw = import.meta.env.VITE_CONTACT_PHONE;
   const phone = raw.replace(/[^0-9]/g, "");
   const text = encodeURIComponent(
     "Hello, I would like to enquire about your courses.",

@@ -43,9 +43,9 @@ export default function TopBanner() {
           <Link to="/our-center" className="banner-nav-link">
             Our Centers
           </Link>
-          <Link to="/contact" className="banner-nav-link">
+          {/* <Link to="/contact" className="banner-nav-link">
             Support
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

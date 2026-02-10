@@ -1,16 +1,19 @@
 /* Header responsive layout and navigation */
 
 .site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   background: #fff;
   box-shadow: var(--shadow-sm);
   width: 100%;
-  gap: 8px;
-  flex-wrap: wrap;
+}
+
+.header-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 @media (min-width: 768px) {
