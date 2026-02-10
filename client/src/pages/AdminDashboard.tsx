@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "../components/Button";
 import CourseModal from "../components/CourseModal";
 import { courses as dummyCourses } from "../data/courses";
+import "./AdminDashboard.scss";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
@@ -247,29 +248,16 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated) {
     return (
-      <main>
-        <div
-          style={{
-            maxWidth: 400,
-            margin: "60px auto",
-            padding: 32,
-            background: "#fff",
-            borderRadius: 8,
-            border: "1px solid #e0e0e0",
-          }}
-        >
-          <h1 style={{ textAlign: "center", marginTop: 0 }}>Admin Login</h1>
-          <p style={{ textAlign: "center", color: "#666" }}>
+      <main className="admin-dashboard">
+        <div className="admin-login-card">
+          <h1 className="admin-login-title">Admin Login</h1>
+          <p className="admin-login-sub">
             Enter your credentials to access the admin panel
           </p>
 
-          <form onSubmit={handleLogin} style={{ display: "grid", gap: 16 }}>
+          <form onSubmit={handleLogin} className="admin-login-form">
             <div>
-              <label
-                style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-              >
-                Username
-              </label>
+              <label className="form-label">Username</label>
               <input
                 type="text"
                 placeholder="Enter your username"
@@ -278,23 +266,12 @@ export default function AdminDashboard() {
                   setLoginForm({ ...loginForm, username: e.target.value })
                 }
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: "1px solid #e0e0e0",
-                  borderRadius: 6,
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                }}
+                className="form-input"
               />
             </div>
 
             <div>
-              <label
-                style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-              >
-                Password
-              </label>
+              <label className="form-label">Password</label>
               <input
                 type="password"
                 placeholder="Enter your password"
@@ -303,36 +280,17 @@ export default function AdminDashboard() {
                   setLoginForm({ ...loginForm, password: e.target.value })
                 }
                 required
-                style={{
-                  width: "100%",
-                  padding: "10px 12px",
-                  border: "1px solid #e0e0e0",
-                  borderRadius: 6,
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                }}
+                className="form-input"
               />
             </div>
 
-            {loginError && (
-              <div
-                style={{
-                  padding: 12,
-                  background: "#f8d7da",
-                  color: "#721c24",
-                  borderRadius: 6,
-                  fontSize: "0.9rem",
-                }}
-              >
-                {loginError}
-              </div>
-            )}
+            {loginError && <div className="form-error">{loginError}</div>}
 
             <Button
               type="submit"
               variant="primary"
               disabled={loginLoading}
-              style={{ width: "100%" }}
+              className="full-width"
             >
               {loginLoading ? "Logging in..." : "Login"}
             </Button>
@@ -354,15 +312,8 @@ export default function AdminDashboard() {
   const enquiryCount = submissions.filter((s) => s.type === "enquiry").length;
 
   return (
-    <main>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 24,
-        }}
-      >
+    <main className="admin-dashboard">
+      <div className="admin-header">
         <h1>Admin Dashboard</h1>
         <Button variant="outline" onClick={handleLogout}>
           Logout
@@ -370,7 +321,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* View Switcher */}
-      <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
+      <div className="admin-view-switcher">
         <Button
           variant={currentView === "submissions" ? "primary" : "outline"}
           onClick={() => setCurrentView("submissions")}
@@ -389,24 +340,9 @@ export default function AdminDashboard() {
         <>
           <p>Manage form submissions from Contact and Franchise pages.</p>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "250px 1fr",
-              gap: 24,
-              marginTop: 32,
-            }}
-          >
+          <div className="admin-content-grid">
             {/* Sidebar */}
-            <div
-              style={{
-                background: "#fff",
-                padding: 20,
-                borderRadius: 8,
-                border: "1px solid #e0e0e0",
-                height: "fit-content",
-              }}
-            >
+            <div className="admin-sidebar">
               <h3 style={{ marginTop: 0 }}>Filter by Type</h3>
               <div style={{ display: "grid", gap: 8 }}>
                 <div
@@ -464,7 +400,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Main Content */}
-            <div>
+            <div className="admin-main-content">
               {loading ? (
                 <p>Loading submissions...</p>
               ) : filteredSubmissions.length === 0 ? (
@@ -479,13 +415,7 @@ export default function AdminDashboard() {
                   No submissions found.
                 </p>
               ) : (
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 24,
-                  }}
-                >
+                <div className="submissions-columns">
                   {/* List */}
                   <div>
                     <h3>Submissions ({filteredSubmissions.length})</h3>
