@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Franchise.scss";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const items = [
   {
     title: "Become a Partner",
@@ -41,8 +43,8 @@ export default function Franchise() {
     setStatus("sending");
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL || "http://localhost:4000"}/api/submissions/franchise`,
+      const response = await axios.post(
+        `${API_BASE_URL}/api/submissions/franchise`,
         form,
         {
           headers: { "Content-Type": "application/json" },

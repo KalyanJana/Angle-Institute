@@ -3,8 +3,7 @@ import axios from "axios";
 import Button from "../components/Button";
 import "./Contact.scss";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const CONTACT_PHONE = import.meta.env.VITE_CONTACT_PHONE || "+91-9088012311";
 const CONTACT_EMAIL =
   import.meta.env.VITE_CONTACT_EMAIL || "info@angleinstitute.com";
