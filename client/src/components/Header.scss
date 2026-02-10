@@ -5,6 +5,7 @@
   background: #fff;
   box-shadow: var(--shadow-sm);
   width: 100%;
+  position: relative;
 }
 
 .header-container {
@@ -62,18 +63,27 @@
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: 0;
-  padding: 6px 8px;
+  border: 2px solid #e0e0e0;
+  padding: 8px 10px;
   cursor: pointer;
   flex-shrink: 0;
   margin-left: auto;
   z-index: 501;
+  border-radius: 6px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-toggle:hover {
+  border-color: var(--brand);
+  background: rgba(11, 94, 215, 0.05);
 }
 
 .nav-toggle svg {
   width: 24px;
   height: 24px;
   display: block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #333;
 }
 
 @media (min-width: 768px) {
@@ -133,28 +143,78 @@
 .site-nav.mobile-open {
   display: flex !important;
   flex-direction: column;
-  gap: 4px;
+  gap: 0;
   position: fixed;
   top: 64px;
-  left: 8px;
-  right: 8px;
-  background: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 24px 16px;
+  border-radius: 0;
+  border-left: 1px solid #e0e0e0;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.12);
   z-index: 500;
+  overflow-y: auto;
+  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Backdrop overlay */
+.nav-backdrop {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 499;
+    animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 .site-nav.mobile-open a {
-  padding: 10px 8px;
+  padding: 16px 16px;
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
   border-bottom: none;
-  border-radius: 4px;
-  transition: background 0.2s;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #333;
+  display: block;
+  text-decoration: none;
+  border-left: 3px solid transparent;
 }
 
 .site-nav.mobile-open a:hover {
-  background: var(--brand-light);
-  border-bottom: none;
+  background: rgba(11, 94, 215, 0.08);
+  border-left-color: var(--brand);
+  color: var(--brand);
+  padding-left: 20px;
 }

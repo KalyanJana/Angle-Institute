@@ -7,6 +7,7 @@ export default function Header() {
 
   return (
     <header className="site-header">
+      {open && <div className="nav-backdrop" onClick={() => setOpen(false)} />}
       <div className="container header-container">
         <div className="site-logo">
           <img
