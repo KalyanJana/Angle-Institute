@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 // import axios from "axios";
 import Card from "../components/Card";
 import { courses as dummyCourses } from "../data/courses";
+import "./Courses.scss";
 
 // const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 

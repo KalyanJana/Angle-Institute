@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import { courses } from "../data/courses";
+import "./Home.scss";
 
 export default function Home() {
   const featuredCourses = courses.slice(0, 4);
@@ -9,27 +10,11 @@ export default function Home() {
   return (
     <main>
       <div className="hero">
-        <div
-          style={{
-            display: "flex",
-            gap: 40,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <img
-            src="/images/col-3.jpg"
-            alt="banner"
-            style={{
-              height: 200,
-              borderRadius: 8,
-              objectFit: "cover",
-              flex: "0 1 300px",
-            }}
-          />
-          <div style={{ flex: 1, minWidth: 300 }}>
+        <div className="hero-content">
+          <img src="/images/col-3.jpg" alt="banner" className="hero-image" />
+          <div className="hero-text">
             <h1>Welcome to Angle Institute</h1>
-            <p style={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
+            <p>
               Leading training institute for IT, networking, multimedia and
               professional development. We've been empowering students since
               1998 with world-class training and certifications.
@@ -43,7 +28,7 @@ export default function Home() {
         </div>
       </div>
 
-      <section style={{ marginTop: 48, marginBottom: 48 }}>
+      <section style={{ marginTop: 32, marginBottom: 32 }}>
         <h2>Featured Courses</h2>
         <p style={{ fontSize: "1rem", color: "#666" }}>
           Choose from our wide range of professional and skill development
@@ -73,41 +58,26 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        style={{
-          background: "#e7f1ff",
-          padding: "40px 24px",
-          borderRadius: 8,
-          textAlign: "center",
-          marginBottom: 48,
-        }}
-      >
+      <section className="section-features">
         <h2>Why Choose Angle Institute?</h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: 24,
-            marginTop: 24,
-          }}
-        >
-          <div>
-            <div style={{ fontSize: "2rem", marginBottom: 8 }}>🎓</div>
+        <div className="features-grid">
+          <div className="feature-item">
+            <div className="feature-icon">🎓</div>
             <h4>Expert Instructors</h4>
             <p>Industry professionals with years of experience</p>
           </div>
-          <div>
-            <div style={{ fontSize: "2rem", marginBottom: 8 }}>📜</div>
+          <div className="feature-item">
+            <div className="feature-icon">📜</div>
             <h4>Certification</h4>
             <p>Recognized courses with industry-backed certifications</p>
           </div>
-          <div>
-            <div style={{ fontSize: "2rem", marginBottom: 8 }}>💼</div>
+          <div className="feature-item">
+            <div className="feature-icon">💼</div>
             <h4>Placement Support</h4>
             <p>Career guidance and placement assistance</p>
           </div>
-          <div>
-            <div style={{ fontSize: "2rem", marginBottom: 8 }}>🌍</div>
+          <div className="feature-item">
+            <div className="feature-icon">🌍</div>
             <h4>Flexible Learning</h4>
             <p>Online and offline modes available</p>
           </div>

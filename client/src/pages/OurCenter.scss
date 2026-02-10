@@ -1,48 +1,175 @@
 .our-center-page {
-  padding: 40px 20px;
+  padding: 24px 12px;
   max-width: 1200px;
   margin: 0 auto;
 }
 
+@media (min-width: 768px) {
+  .our-center-page {
+    padding: 32px 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .our-center-page {
+    padding: 40px 24px;
+  }
+}
+
 .oc-hero {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .oc-hero {
+    margin-bottom: 28px;
+  }
+}
+
+.oc-hero h1 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 768px) {
+  .oc-hero h1 {
+    font-size: 2rem;
+  }
+}
+
+.oc-hero p {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+@media (min-width: 768px) {
+  .oc-hero p {
+    font-size: 1rem;
+  }
 }
 
 .oc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 480px) {
+  .oc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .oc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .oc-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
 }
 
 .oc-card {
   border: 1px solid #e6e8ee;
   border-radius: 8px;
-  padding: 16px;
+  padding: 14px;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(22, 36, 70, 0.04);
+  box-shadow: 0 2px 8px rgba(22, 36, 70, 0.04);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .oc-card {
+    padding: 18px;
+    box-shadow: 0 4px 12px rgba(22, 36, 70, 0.04);
+  }
+}
+
+.oc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(22, 36, 70, 0.08);
 }
 
 .oc-card-header h3 {
   margin: 0 0 6px 0;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .oc-card-header h3 {
+    font-size: 1.1rem;
+  }
 }
 
 .oc-address {
   margin: 0;
   color: #586079;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .oc-address {
+    font-size: 0.95rem;
+  }
 }
 
 .oc-features {
-  margin: 12px 0 16px 0;
-  padding-left: 18px;
+  margin: 10px 0 12px 0;
+  padding-left: 16px;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 768px) {
+  .oc-features {
+    margin: 12px 0 14px 0;
+    padding-left: 18px;
+    font-size: 0.9rem;
+  }
+}
+
+.oc-features li {
+  margin: 4px 0;
+}
+
+@media (min-width: 768px) {
+  .oc-features li {
+    margin: 6px 0;
+  }
+}
+
+.oc-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .oc-cta {
   display: inline-block;
   background: #192f59;
   color: #fff;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .oc-cta {
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+}
+
+.oc-cta:hover {
+  background: #0b5ed7;
+  transform: translateY(-1px);
 }

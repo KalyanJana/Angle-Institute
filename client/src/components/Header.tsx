@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import "./Header.scss";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="site-header container">
+    <header className="site-header">
       {/* <div className="site-header container"> */}
       <div className="site-logo">
         <img src="/images/logo.png" alt="Angle Institute logo" />

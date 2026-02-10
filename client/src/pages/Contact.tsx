@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import Button from "../components/Button";
+import "./Contact.scss";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
@@ -52,122 +53,61 @@ export default function Contact() {
 
   return (
     <main>
-      <h1>Contact Us</h1>
-      <p>
-        Have questions? We'd love to hear from you. Fill out the form below and
-        we'll get back to you soon.
-      </p>
+      <div className="contact-header">
+        <h1>Contact Us</h1>
+        <p>
+          Have questions? We'd love to hear from you. Fill out the form below
+          and we'll get back to you soon.
+        </p>
+      </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 40,
-          marginTop: 40,
-        }}
-      >
-        <form onSubmit={submit} style={{ display: "grid", gap: 16 }}>
-          <div>
-            <label
-              style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-            >
-              Name
-            </label>
+      <div className="contact-wrapper">
+        <form onSubmit={submit} className="contact-form">
+          <div className="form-group">
+            <label>Name</label>
             <input
               placeholder="Your full name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #e0e0e0",
-                borderRadius: 6,
-                fontFamily: "inherit",
-              }}
             />
           </div>
-          <div>
-            <label
-              style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-            >
-              Email
-            </label>
+          <div className="form-group">
+            <label>Email</label>
             <input
               placeholder="your@email.com"
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #e0e0e0",
-                borderRadius: 6,
-                fontFamily: "inherit",
-              }}
             />
           </div>
-          <div>
-            <label
-              style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-            >
-              Phone
-            </label>
+          <div className="form-group">
+            <label>Phone</label>
             <input
               placeholder="+91-xxxxxxxxxx"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
               required
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #e0e0e0",
-                borderRadius: 6,
-                fontFamily: "inherit",
-              }}
             />
           </div>
-          <div>
-            <label
-              style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-            >
-              Subject
-            </label>
+          <div className="form-group">
+            <label>Subject</label>
             <input
               placeholder="Course enquiry / General question"
               value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
               required
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #e0e0e0",
-                borderRadius: 6,
-                fontFamily: "inherit",
-              }}
             />
           </div>
-          <div>
-            <label
-              style={{ display: "block", marginBottom: 4, fontWeight: 600 }}
-            >
-              Message
-            </label>
+          <div className="form-group">
+            <label>Message</label>
             <textarea
               placeholder="Tell us more..."
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               required
               rows={5}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                border: "1px solid #e0e0e0",
-                borderRadius: 6,
-                fontFamily: "inherit",
-                resize: "vertical",
-              }}
             />
           </div>
           <Button type="submit" variant="primary" disabled={loading}>
@@ -175,21 +115,14 @@ export default function Contact() {
           </Button>
         </form>
 
-        <div
-          style={{
-            background: "#fff",
-            padding: 24,
-            borderRadius: 8,
-            border: "1px solid #e0e0e0",
-          }}
-        >
-          <h3>Get in Touch</h3>
-          <div style={{ marginTop: 20 }}>
-            <h4 style={{ marginTop: 0 }}>Address</h4>
+        <div className="info-item">
+          <h2 style={{ marginBottom: 20 }}>Get in Touch</h2>
+          <div>
+            <h3>Address</h3>
             <p>{CONTACT_ADDRESS}</p>
           </div>
-          <div>
-            <h4>Contact</h4>
+          <div style={{ marginTop: 20 }}>
+            <h3>Contact</h3>
             <p>
               <strong>Phone:</strong>{" "}
               <a href={`tel:${CONTACT_PHONE}`}>{CONTACT_PHONE}</a>
@@ -198,8 +131,8 @@ export default function Contact() {
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </p>
           </div>
-          <div>
-            <h4>Hours</h4>
+          <div style={{ marginTop: 20 }}>
+            <h3>Hours</h3>
             <p>
               Monday - Friday: 9:00 AM - 6:00 PM
               <br />

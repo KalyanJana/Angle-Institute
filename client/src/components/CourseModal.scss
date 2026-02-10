@@ -23,6 +23,13 @@
   animation: modalSlideIn 0.3s ease-out;
 }
 
+@media (max-width: 480px) {
+  .course-modal {
+    width: 95%;
+    max-width: 100%;
+  }
+}
+
 @keyframes modalSlideIn {
   from {
     transform: translateY(-50px);
@@ -126,17 +133,40 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+
+@media (min-width: 500px) {
+  .form-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .form-actions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  justify-content: flex-end;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 500px) {
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.form-actions button {
+  width: 100%;
+}
+
+@media (min-width: 500px) {
+  .form-actions button {
+    width: auto;
+  }
 }
 
 .btn-primary,
