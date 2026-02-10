@@ -43,13 +43,9 @@ export default function Franchise() {
     setStatus("sending");
 
     try {
-      const response = await axios.post(
-        `${API_BASE_URL}/api/submissions/franchise`,
-        form,
-        {
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      await axios.post(`${API_BASE_URL}/api/submissions/franchise`, form, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       setStatus("success");
       setForm({ name: "", email: "", phone: "", address: "", location: "" });
