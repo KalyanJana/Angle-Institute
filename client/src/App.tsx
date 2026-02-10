@@ -14,7 +14,7 @@ import AdminRegister from "./pages/AdminRegister";
 import OurCenter from "./pages/OurCenter";
 import Franchise from "./pages/Franchise";
 import WhatsAppButton from "./components/WhatsAppButton";
-import "./App.css";
+import "./App.scss";
 
 export default function App() {
   return (

@@ -1,4 +1,4 @@
-import "./WhatsAppButton.css";
+import "./WhatsAppButton.scss";
 
 export default function WhatsAppButton() {
   const raw = import.meta.env.VITE_WHATSAPP_NUMBER || "+919088012311";

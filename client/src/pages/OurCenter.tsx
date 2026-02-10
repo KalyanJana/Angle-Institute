@@ -1,4 +1,4 @@
-import "./OurCenter.css";
+import "./OurCenter.scss";
 
 const centers = [
   {

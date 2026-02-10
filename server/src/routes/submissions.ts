@@ -44,7 +44,12 @@ router.post("/contact", async (req: Request, res: Response) => {
         phone,
         message,
       });
-      const adminEmail = process.env.ADMIN_EMAIL || "admin@angleinstitute.com";
+      const adminEmail = process.env.ADMIN_EMAIL || "";
+
+      if (!adminEmail) {
+        console.error("[API] ADMIN_EMAIL not configured in .env");
+        return;
+      }
 
       const sent = await EmailService.sendWithRetry({
         to: adminEmail,
@@ -110,8 +115,12 @@ router.post("/franchise", async (req: Request, res: Response) => {
         address,
         location,
       });
-      const franchiseEmail =
-        process.env.FRANCHISE_EMAIL || "franchise@angleinstitute.com";
+      const franchiseEmail = process.env.ADMIN_EMAIL || "";
+
+      if (!franchiseEmail) {
+        console.error("[API] ADMIN_EMAIL not configured in .env");
+        return;
+      }
 
       const sent = await EmailService.sendWithRetry({
         to: franchiseEmail,

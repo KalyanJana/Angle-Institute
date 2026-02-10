@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./CourseModal.css";
+import "./CourseModal.scss";
 
 interface CourseFormData {
   title: string;

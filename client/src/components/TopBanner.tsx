@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./TopBanner.css";
+import "./TopBanner.scss";
 
 export default function TopBanner() {
   const contactPhone = import.meta.env.VITE_CONTACT_PHONE;
